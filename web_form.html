@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Piotr Brutkowski CV Ulster University">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <meta name="author" content="Piotr Brutkowski">
+
+	<title>Piotr Brutkowski CV</title>
+	<link rel="stylesheet" href="/~B00751115/workspace/com109/css/form_style.css">
+</head>
+<body>  
+    <div class="accessibilityBar">
+        <div class="accessibilityTypeContainer">
+            Page Colour
+            <input id="lightModeButton" type="button" name="light">
+            <input id="darkModeButton" type="button" name="dark">
+        </div>
+
+        <div class="accessibilityTypeContainer">
+            Text Size
+            <input id="bigText" type="button" value="A">
+            <input id="smallText" type="button" value="a">           
+        </div>
+    </div>
+
+    <form id="myForm" class="regForm" action="process_CV_requests.php" method="post" autocomplete="off">
+        <div class="header">
+            <h2>SignUp for My CV</h2>
+        </div>   
+
+        <div class="textInputContainer">        
+    	   <input class="inputArea" type="text" id="email" name="emailid" maxlength="50">
+            <label for="email" class="movingLabel">Enter an Email Address</label> 
+            <span id="emailError"class="error"><br>Invalid email address! Valid example: abc-d@mail.com</span>
+        </div>
+
+        <div class="textInputContainer">
+    	   <input class="inputArea" type="text" id="person_name" name="name" maxlength="50">
+            <label for="person_name" class="movingLabel">Enter Your Full Name</label> 
+            <span id="nameError"class="error"><br>Field can't include numbers! (min. 3 characters)</span>
+        </div>
+
+        <div class="textInputContainer">
+    	   <input class="inputArea" type="text" id="company_name" name="company" maxlength="50">
+            <label for="company_name" class="movingLabel">Who you work for</label>
+            <span id="companyError" class="error"><br>Please enter your company name!</span>
+        </div>
+    
+        <div>
+    	   <textarea id="usercomment" name="usercomment" rows="5" cols="45" style="resize: none">Please leave a comment on why you would like to see my CV</textarea>
+        </div>
+
+        <div>
+    	   <label class="labelText">Short CV<input type="radio" id="CV_no_1" name="cvChoice" value="short" checked/></label>
+    	   <label class="labelText">Long CV<input type="radio" id="CV_no_2" name="cvChoice" value="long"/></label>
+        </div>
+
+        <div>
+		  <input type="checkbox" name="agree" id="checkboxID" name="checkbox">
+		  <label for="checkboxID" class="labelText">I understand my personal details will be collected.</label>
+          <span id="checkboxError" class="error"><br>Click!</span>
+	   </div>
+    
+        <div>
+    	   <input id="cvButton" type="submit" name="request_CV" value="Request CV">
+        </div>
+    </form>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        function isValid(emailVar) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVar);
+        }
+
+        function isStringValid(stringVar){
+            //Regex allows multiple words, special characters('.- ) in the
+            //middle of the name and the number of characters must be greater than 3,
+            var regex = /^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])*)){3,}$/;
+
+            return regex.test(stringVar);
+        }
+
+        $(document).ready(function(){
+            
+            //Enables the Dark Mode on the page
+            $("#darkModeButton").click(function (){
+                $(".inputArea, textarea").css("background-color", "silver");
+                $(".header").css("background-color", "grey");
+                $(".header").css("border-radius", "5px 5px 0 0");
+                $("form").css("background-color", "silver");
+                $("body").css("background-color", "#696969");
+            });
+
+            //Enables the Bright(default) Mode on the page
+            $("#lightModeButton").click(function (){
+                $(".inputArea, textarea").css("background-color", "white");
+                $(".header").css("background-color", "#f7f7f7f7");
+                $("form").css("background-color", "white");
+                $("body").css("background-color", "white");
+            });
+
+            //Enables big text on the page
+            $("#bigText").click(function (){
+                $("form div").css("padding", "8px 25px")
+                $(".regForm").css("height", "720px").css("width", "600px");
+                $(".header").css("font-size", "40px");
+                $(".movingLabel").css("font-size", "21px").css("left", "16%").css("bottom", "20px");
+                $(".inputArea").css("font-size", "22px").css("width", "400px");
+                $(".error").css("font-size", "16px");
+                $("textarea").css("width", "400px").css("height", "80px").css("font-size", "20px");
+                $(".labelText").css("font-size", "20px");
+                $("#cvButton").css("width", "400px");
+            });
+
+            //Enables small(default) text on the page
+            $("#smallText").click(function (){
+                $("form div").css("padding", "6px 25px")
+                $(".regForm").css("height", "630px").css("width", "430px");
+                $(".header").css("font-size", "25px");
+                $(".movingLabel").css("font-size", "16px").css("left", "11%");
+                $(".inputArea").css("font-size", "15px").css("width", "330px");
+                $(".error").css("font-size", "14px");
+                $("textarea").css("width", "330px").css("height", "65px").css("font-size", "12px");
+                $(".labelText").css("font-size", "14px");
+                $("#cvButton").css("width", "330px");
+            });
+
+            function checkIfLabelIsUp(){
+                $(".textInputContainer .inputArea").blur(function(){
+                    //Adds a new class to the moving label if the inputArea is not empty
+                    if($(this).val() != ""){
+                        $(this).siblings(".movingLabel").addClass("isUp");
+                    } else {
+                        $(this).siblings(".movingLabel").removeClass("isUp");
+                    }
+                });
+            }
+
+            checkIfLabelIsUp();
+            
+            $("#email").focus(); //Puts the cursor in the first input box on the page
+
+            $("form").submit(function (e) {
+
+                var email = $("#email").val(); //Gets the value from the email input 
+                var name = $("#person_name").val(); //Gets the value from the name input 
+                var company = $("#company_name").val(); //Gets the value from the company input 
+
+                var error = false;
+
+                //Checks if the email is of the right format
+                function checkEmail(){
+                    if(!isValid(email)){
+                        $("#emailError").css("visibility", "visible");    
+                        $("#email").css("border-color", "red");
+                        error = true;
+                    } else {
+                        $("#email").css("border-color", "green");
+                        $("#emailError").css("visibility", "hidden");
+                    }
+                }
+
+                checkEmail();
+                
+                //Checks if the name is of the right format
+                function checkName(){
+                    if(!isStringValid(name)){
+                        $("#nameError").css("visibility", "visible");
+                        $("#person_name").css("border-color", "red");
+                        error = true;
+                    } else {
+                        $("#person_name").css("border-color", "green");
+                        $("#nameError").css("visibility", "hidden");
+                    }
+                }
+
+                checkName();
+
+                //Checks if the company is of the right format
+                function checkCompany(){
+                    if(company.length <= 0){
+                        $("#companyError").css("visibility", "visible");
+                        $("#company_name").css("border-color", "red");
+                        error = true;
+                    } else {
+                        $("#company_name").css("border-color", "green");
+                        $("#companyError").css("visibility", "hidden");
+                    }
+                }
+
+                checkCompany();
+
+                //Checks if the checkbox is ticked
+                function checkCheckbox(){
+                    if($("#checkboxID").is(":not(:checked)")){
+                        $("#checkboxError").css("visibility", "visible");
+                        error = true;
+                    } else {
+                        $("#checkboxError").css("visibility", "hidden");
+                    }
+                }
+
+                checkCheckbox();
+
+                if(error){
+                    e.preventDefault(); //Prevents form from being sumbitted with errors
+                }
+
+            });
+        });
+
+        </script>
+
+</body>
+</html>
